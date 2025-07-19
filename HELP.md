@@ -9,7 +9,6 @@ For further reference, please consider the following sections:
 * [Create an OCI image](https://docs.spring.io/spring-boot/3.5.3/gradle-plugin/packaging-oci-image.html)
 * [Spring Boot Testcontainers support](https://docs.spring.io/spring-boot/3.5.3/reference/testing/testcontainers.html#testing.testcontainers)
 * [Testcontainers MySQL Module Reference Guide](https://java.testcontainers.org/modules/databases/mysql/)
-* [Spring Boot Actuator](https://docs.spring.io/spring-boot/3.5.3/reference/actuator/index.html)
 * [Spring Configuration Processor](https://docs.spring.io/spring-boot/3.5.3/specification/configuration-metadata/annotation-processor.html)
 * [Spring Data JPA](https://docs.spring.io/spring-boot/3.5.3/reference/data/sql.html#data.sql.jpa-and-spring-data)
 * [Spring Data Redis (Access+Driver)](https://docs.spring.io/spring-boot/3.5.3/reference/data/nosql.html#data.nosql.redis)
@@ -27,7 +26,6 @@ For further reference, please consider the following sections:
 
 The following guides illustrate how to use some features concretely:
 
-* [Building a RESTful Web Service with Spring Boot Actuator](https://spring.io/guides/gs/actuator-service/)
 * [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
 * [Messaging with Redis](https://spring.io/guides/gs/messaging-redis/)
 * [Accessing data with MySQL](https://spring.io/guides/gs/accessing-data-mysql/)
