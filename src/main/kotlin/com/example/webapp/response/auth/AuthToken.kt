@@ -1,4 +1,4 @@
-package com.example.webapp.response
+package com.example.webapp.response.auth
 
 import kotlinx.serialization.Serializable
 

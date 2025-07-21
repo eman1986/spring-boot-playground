@@ -1,4 +1,4 @@
-package com.example.webapp.services
+package com.example.webapp.service
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
@@ -6,15 +6,17 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.JWTVerificationException
 import com.example.webapp.helper.DateTimeHelper
 import com.example.webapp.helper.StringHelper
-import com.example.webapp.response.AuthToken
+import com.example.webapp.response.auth.AuthToken
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Service
 import kotlin.time.ExperimentalTime
 import kotlin.time.toJavaInstant
 import kotlin.uuid.ExperimentalUuidApi
 
+@Service
 class JwtService {
     @Value($$"${jwt.issuer}")
     private val jwtIssuer: String? = null
@@ -72,5 +74,11 @@ class JwtService {
         val token = JWT.decode(jwt)
 
         return token.id
+    }
+
+    fun getUid(jwt: String): String {
+        val token = JWT.decode(jwt)
+
+        return token.claims["uid"].toString()
     }
 }
