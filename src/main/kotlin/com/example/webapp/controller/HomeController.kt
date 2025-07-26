@@ -19,4 +19,10 @@ class HomeController {
     {
         return RestfulResponse(true, "API is live!")
     }
+
+    @GetMapping("/secure")
+    public fun secure(): RestfulResponse<String>
+    {
+        return RestfulResponse(true, "Secure area")
+    }
 }

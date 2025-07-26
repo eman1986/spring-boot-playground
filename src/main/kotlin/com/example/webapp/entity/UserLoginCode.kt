@@ -7,11 +7,13 @@ import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
-
 @OptIn(ExperimentalTime::class)
-@Table(name = "users")
+@Table(name = "user_login_code", indexes = [
+    Index(name = "idx_name_email", columnList = "name, email"),
+    Index(name = "idx_unique_code", columnList = "code",  unique = true)
+])
 @Entity
-class User (
+class UserLoginCode(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
@@ -22,15 +24,12 @@ class User (
     private val createdAt: Instant = Clock.System.now(),
 
     @UpdateTimestamp
-    @Column(name = "updated_at")
-    private val updatedAt: Instant = Clock.System.now(),
+    @Column(name = "expires_at")
+    private val expiresAt: Instant,
 
-    @Column(name = "email", unique = true, length = 255, nullable = false)
-    private val email: String,
+    @Column(name = "user_id", nullable = false)
+    val userId: Int,
 
-    @Column(name = "first_name", length = 100, nullable = false)
-    private val firstName: String? = null,
-
-    @Column(name = "last_name", length = 100, nullable = false)
-    private val lastName: String? = null
+    @Column(name = "code", unique = true, length = 6, nullable = false)
+    val code: String
 )
