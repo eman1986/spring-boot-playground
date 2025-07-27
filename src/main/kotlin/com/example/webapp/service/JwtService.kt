@@ -1,7 +1,6 @@
 package com.example.webapp.service
 
 import com.auth0.jwt.JWT
-import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.JWTVerificationException
 import com.example.webapp.helper.DateTimeHelper
@@ -27,12 +26,6 @@ class JwtService {
     @Value($$"${jwt.secret}")
     private val jwtSecret: String? = null
 
-    fun jwtVerifier(): JWTVerifier = JWT
-        .require(Algorithm.HMAC512(jwtSecret))
-        .withAudience(jwtAudience)
-        .withIssuer(jwtIssuer)
-        .build()
-
     @OptIn(ExperimentalTime::class, ExperimentalUuidApi::class)
     fun issueJwt(userId: Int): AuthToken {
         val now = DateTimeHelper.now()
@@ -55,8 +48,7 @@ class JwtService {
 
     fun verifyJwt(token: String): Boolean {
         try {
-            val algorithm = Algorithm.HMAC512(jwtSecret)
-            val verifier = JWT.require(algorithm)
+            val verifier = JWT.require(Algorithm.HMAC512(jwtSecret))
                 .withIssuer(jwtIssuer)
                 .withAudience(jwtAudience)
                 .build()
