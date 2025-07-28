@@ -2,34 +2,30 @@ package com.example.webapp.entity
 
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.UpdateTimestamp
-import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
-@OptIn(ExperimentalTime::class)
 @Table(name = "user_login_code", indexes = [
-    Index(name = "idx_name_email", columnList = "name, email"),
-    Index(name = "idx_unique_code", columnList = "code",  unique = true)
+    Index(name = "idx_userId_code", columnList = "userId, code")
 ])
 @Entity
 class UserLoginCode(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
-    private val id: Long? = null,
+    var id: Long? = null,
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
-    private val createdAt: Instant = Clock.System.now(),
+    var createdAt: Instant = LocalDateTime.now().toInstant(ZoneOffset.UTC),
 
-    @UpdateTimestamp
-    @Column(name = "expires_at")
-    private val expiresAt: Instant,
+    @Column(updatable = false, name = "expires_at")
+    var expiresAt: Instant? = null,
 
     @Column(name = "user_id", nullable = false)
-    val userId: Int,
+    var userId: Long,
 
     @Column(name = "code", unique = true, length = 6, nullable = false)
-    val code: String
+    var code: String
 )

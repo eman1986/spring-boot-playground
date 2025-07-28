@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.config.web.server.invoke
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm
 import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import org.springframework.security.web.server.SecurityWebFilterChain
@@ -37,9 +38,9 @@ class SecurityConfig(private val jwtService: JwtService, private val userService
             authorizeExchange {
                 authorize("/", permitAll)
                 authorize("/login", permitAll)
-                authorize("/verify-code", permitAll)
+                authorize("/login/verify", permitAll)
                 authorize("/refresh", permitAll)
-                authorize("/register", permitAll)
+                authorize("/user/create", permitAll)
                 authorize("/json", permitAll)
                 authorize("/**", authenticated)
             }
@@ -71,7 +72,8 @@ class SecurityConfig(private val jwtService: JwtService, private val userService
     @Bean
     fun jwtDecoder(): ReactiveJwtDecoder {
         return NimbusReactiveJwtDecoder
-            .withSecretKey(SecretKeySpec(jwtSecret.toByteArray(), "HS512"))
+            .withSecretKey(SecretKeySpec(jwtSecret.toByteArray(), "HmacSHA512"))
+            .macAlgorithm(MacAlgorithm.HS512)
             .build()
     }
 }

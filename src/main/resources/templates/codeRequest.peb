@@ -1,0 +1,11 @@
+{% extends "templates/mailer.peb" %}
+
+{% block content %}
+    <h3>Login Code</h3>
+    <p>
+        Your Login code: <b>{{ code }}</b>.
+    </p>
+    <p>
+        This code is valid for <em>15 minutes</em>.
+    </p>
+{% endblock %}

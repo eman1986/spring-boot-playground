@@ -36,3 +36,6 @@ out/
 
 ### Kotlin ###
 .kotlin
+
+# this should never be in source.
+.env

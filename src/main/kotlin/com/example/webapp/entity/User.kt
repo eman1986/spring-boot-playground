@@ -3,34 +3,34 @@ package com.example.webapp.entity
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
-import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
-
-@OptIn(ExperimentalTime::class)
-@Table(name = "users")
+@Table(name = "users", indexes = [
+    Index(name = "idx_name_email", columnList = "first_name, last_name, email")
+])
 @Entity
 class User (
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
-    private val id: Long? = null,
+    val id: Long? = null,
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
-    private val createdAt: Instant = Clock.System.now(),
+    val createdAt: Instant = LocalDateTime.now().toInstant(ZoneOffset.UTC),
 
     @UpdateTimestamp
     @Column(name = "updated_at")
-    private val updatedAt: Instant = Clock.System.now(),
+    val updatedAt: Instant = LocalDateTime.now().toInstant(ZoneOffset.UTC),
 
     @Column(name = "email", unique = true, length = 255, nullable = false)
-    private val email: String,
+    val email: String,
 
     @Column(name = "first_name", length = 100, nullable = false)
-    private val firstName: String? = null,
+    val firstName: String? = null,
 
     @Column(name = "last_name", length = 100, nullable = false)
-    private val lastName: String? = null
+    val lastName: String? = null
 )

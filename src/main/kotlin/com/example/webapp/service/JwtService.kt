@@ -3,20 +3,22 @@ package com.example.webapp.service
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.JWTVerificationException
-import com.example.webapp.helper.DateTimeHelper
 import com.example.webapp.helper.StringHelper
 import com.example.webapp.response.auth.AuthToken
-import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.plus
+import io.ktor.util.logging.*
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import kotlin.time.ExperimentalTime
-import kotlin.time.toJavaInstant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import kotlin.uuid.ExperimentalUuidApi
 
 @Service
 class JwtService {
+    companion object {
+        private val log = LoggerFactory.getLogger(this::class.java)
+    }
+
     @Value($$"${jwt.issuer}")
     private val jwtIssuer: String? = null
 
@@ -26,20 +28,19 @@ class JwtService {
     @Value($$"${jwt.secret}")
     private val jwtSecret: String? = null
 
-    @OptIn(ExperimentalTime::class, ExperimentalUuidApi::class)
-    fun issueJwt(userId: Int): AuthToken {
-        val now = DateTimeHelper.now()
-        val exp = now.plus(30, DateTimeUnit.MINUTE, TimeZone.UTC)
+    @OptIn(ExperimentalUuidApi::class)
+    fun issueJwt(userId: Long): AuthToken {
+        val now = LocalDateTime.now()
+        val exp = now.plusMinutes(30)
         val jti = StringHelper.generateSecureRandomString(15)
         val refreshToken = StringHelper.generateRefreshToken()
         val token = JWT.create()
             .withSubject(userId.toString())
             .withAudience(jwtAudience)
             .withIssuer(jwtIssuer)
-            .withClaim("uid", userId.toString())
-            .withIssuedAt(now.toJavaInstant())
-            .withNotBefore(now.toJavaInstant())
-            .withExpiresAt(exp.toJavaInstant())
+            .withIssuedAt(now.toInstant(ZoneOffset.UTC))
+            .withNotBefore(now.toInstant(ZoneOffset.UTC))
+            .withExpiresAt(exp.toInstant(ZoneOffset.UTC))
             .withJWTId(jti)
             .sign(Algorithm.HMAC512(jwtSecret))
 
@@ -54,7 +55,9 @@ class JwtService {
                 .build()
 
             verifier.verify(token)
-        } catch (_: JWTVerificationException) {
+        } catch (e: JWTVerificationException) {
+            log.error(e)
+
             // Invalid signature/claims
             return false
         }
@@ -71,6 +74,6 @@ class JwtService {
     fun getUid(jwt: String): Long {
         val token = JWT.decode(jwt)
 
-        return token.claims["uid"].toString().toLong()
+        return token.subject.toLong()
     }
 }
