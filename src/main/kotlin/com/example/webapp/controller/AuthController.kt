@@ -20,7 +20,7 @@ class AuthController(private val authService: AuthService) {
             throw AuthenticationException("Login Failed.")
         }
 
-        return RestfulResponse(success = true, data = listOf())
+        return RestfulResponse(true)
     }
 
     @PostMapping("/login/verify")

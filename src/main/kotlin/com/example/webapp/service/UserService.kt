@@ -4,9 +4,11 @@ import com.example.webapp.entity.User
 import com.example.webapp.entity.UserLoginCode
 import com.example.webapp.repository.UserLoginCodeRepository
 import com.example.webapp.repository.UserRepository
+import io.lettuce.core.KillArgs.Builder.user
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.springframework.stereotype.Service
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 class UserService(
@@ -15,7 +17,7 @@ class UserService(
     loginCodeRepository: UserLoginCodeRepository
 ) {
     suspend fun getUserById(userId: Long): User?  = withContext(Dispatchers.IO) {
-        userRepository.findById(userId).orElse(null)
+        userRepository.findById(userId).getOrNull()
     }
 
     suspend fun getByCode(code: String): UserLoginCode? = withContext(Dispatchers.IO) {
@@ -34,8 +36,8 @@ class UserService(
         userLoginCodeRepository.save(userLogin)
     }
 
-    suspend fun delete(user: User): Unit = withContext(Dispatchers.IO) {
-        userRepository.deleteById(user.id!!)
+    suspend fun delete(id: Long): Unit = withContext(Dispatchers.IO) {
+        userRepository.deleteById(id)
     }
 
     suspend fun deleteLogin(loginId: Long): Unit = withContext(Dispatchers.IO) {
